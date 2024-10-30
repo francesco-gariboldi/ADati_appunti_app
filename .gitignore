@@ -1,0 +1,16 @@
+# Ignore everything inside the specified folders
+output/
+pages/*
+
+# Ignore work in progress files and bibliography
+bibtex_feature.py
+references.bib
+
+# Allow placeholder files in directories
+!pages/.gitkeep
+
+# Explicitly allow other files in the root directory
+!LICENSE
+!README.md
+!generate_site.py
+

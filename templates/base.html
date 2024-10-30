@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <!-- Stile personalizzato -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Prism.js per l'evidenziazione del codice -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism-tomorrow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js"></script>
+    <!-- Configura MathJax per il rendering delle formule matematiche -->
+    <script type="text/javascript">
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$']],
+          displayMath: [['$$', '$$']]
+        },
+        options: {
+          skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+          processHtmlClass: "mathjax_process"
+        }
+      };
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.js" crossorigin="anonymous"></script>
+    <!-- Script per il dropdown -->
+    <script>
+      function toggleDropdown() {
+          document.getElementById("dropdown-content").classList.toggle("show");
+      }
+      window.onclick = function(event) {
+          if (!event.target.matches('.dropbtn')) {
+              var dropdowns = document.getElementsByClassName("dropdown-content");
+              for (var i = 0; i < dropdowns.length; i++) {
+                  var openDropdown = dropdowns[i];
+                  if (openDropdown.classList.contains('show')) {
+                      openDropdown.classList.remove('show');
+                  }
+              }
+          }
+      }
+    </script>
+    <h1>{{ title }}</h1>
+</head>
+<body>
+    <nav>
+        <div class="dropdown">
+            <button onclick="toggleDropdown()" class="dropbtn">ADati Indice</button>
+            <div id="dropdown-content" class="dropdown-content">
+                {% for page in pages %}
+                    <a href="{{ page }}">{{ page.replace('.html', '')[0] | upper }}{{ page.replace('.html', '')[1:] }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </nav>
+    <main class="mathjax_process">
+        {{ content | safe }}
+    </main>
+</body>
+</html>
