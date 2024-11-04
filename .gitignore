@@ -1,6 +1,10 @@
 # Ignore everything inside the specified folders
-output/
+app_frontend/
 pages/*
+extra/
+
+# Ignore __pycache__/ directories
+__pycache__/
 
 # Ignore work in progress files and bibliography
 bibtex_feature.py
