@@ -13,8 +13,9 @@
     <script type="text/javascript">
       window.MathJax = {
         tex: {
-          inlineMath: [['$', '$']],
-          displayMath: [['$$', '$$']]
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']],
+          processEscapes: true
         },
         options: {
           skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
@@ -39,6 +40,13 @@
               }
           }
       }
+    </script>
+    <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", function() {
+          if (window.MathJax) {
+              MathJax.typesetPromise();
+          }
+      });
     </script>
 </head>
 <body>

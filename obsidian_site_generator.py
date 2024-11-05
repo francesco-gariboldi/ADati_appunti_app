@@ -71,11 +71,14 @@ for filename in os.listdir(pages_dir):
             html_content = md.render(text)
             page_title = filename.replace('.md', '').capitalize()
 
+            # Wrap content with MathJax processing tag
+            html_content = f"<main class='mathjax_process'>{html_content}</main>"
+
             # Render content into the template
             output_content = template.render(
                 title=page_title,
                 content=html_content,
-                pages=[f"{file.replace('.md', '.html')}" for file in os.listdir(pages_dir) if file.endswith('.md')]
+                pages=[file.replace('.md', '.html') for file in os.listdir(pages_dir) if file.endswith('.md')]
             )
 
             # Save HTML output to frontend directory
