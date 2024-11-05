@@ -75,7 +75,7 @@ for filename in os.listdir(pages_dir):
             output_content = template.render(
                 title=page_title,
                 content=html_content,
-                pages=[file.replace('.md', '.html') for file in os.listdir(pages_dir) if file.endswith('.md')]
+                pages=[f"{file.replace('.md', '.html')}" for file in os.listdir(pages_dir) if file.endswith('.md')]
             )
 
             # Save HTML output to frontend directory
