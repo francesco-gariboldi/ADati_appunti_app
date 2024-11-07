@@ -1,120 +1,147 @@
-/* Stile generale */
+/* General Styles */
 body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    color: #333;
+    font-family: 'Times New Roman', serif;
+    line-height: 1.5;
+    max-width: none;
+    margin: 0;
+    padding: 10px;
+    background-color: rgb(242, 233, 216);
+    color: #2e3436ff;
 }
 
-/* Dropdown menu */
+/* Typography */
+h1, h2, h3 {
+    line-height: 1.2;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+h1 {
+    font-size: 3em;
+    margin-top: 10px;
+    text-align: center;
+    color: #2f3b86ff;
+}
+
+h2 {
+    font-size: 2.5em;
+    margin-top: 20px;
+    color: #5e9185ff;
+}
+
+h3 {
+    font-size: 2em;
+    margin-top: 15px;
+    color: #5e9185ff;
+}
+
+/* Dropdown Menu */
 .dropdown {
     position: relative;
-    display:block;
+    display: inline-block;
 }
 
 .dropbtn {
-    background-color: #007acc;
-    color: white;
+    background-color: #5e9185ff;
+    color: rgb(242, 233, 216);
     padding: 10px;
     font-size: 16px;
-    border: none;
+    border: 1px solid #000000;
     cursor: pointer;
-    border-radius: 5px;
+}
+
+.dropbtn:hover {
+    background-color: #2f3b86ff;
+    color: rgb(242, 233, 216);
 }
 
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    border-radius: 5px;
+    background-color: #2f3b86ff;
+    min-width: 150px;
+    border: 1px solid #000000;
     z-index: 1;
 }
 
 .dropdown-content a {
-    color: #333;
-    padding: 12px 16px;
+    color: #e7e0d3ff;
+    padding: 10px;
     text-decoration: none;
     display: block;
-    border-bottom: 1px solid #ddd;
 }
 
 .dropdown-content a:hover {
-    background-color: #007acc;
-    color: white;
+    background-color: rgb(255, 170, 12);
+    color: rgb(36, 45, 101);
 }
 
 .show {
     display: block;
 }
 
-/* Stile per titoli */
-h1, h2, h3 {
-    color: #007acc;
-}
+/* Code Highlighting */
 
-h1 {
-    border-bottom: 2px solid #007acc;
-    padding-bottom: 10px;
-}
-
-h2 {
-    margin-top: 20px;
-    font-size: 1.5em;
-}
-
-h3 {
-    font-size: 1.2em;
-}
-
-/* Evidenziazione del codice */
-pre {
-    background-color: #2d2d2d;
-    padding: 15px;
-    border-radius: 5px;
-    color: #f8f8f2;
-    overflow-x: auto;
-}
-
-code {
+/* Inline code styling */
+span.code-inline {
     font-family: 'Courier New', Courier, monospace;
+    background-color: #f5f5f5;
+    padding: 2px 4px;
+    border-radius: 3px;
+    color: #d63384;
 }
 
-/* Callouts style */
-.callout {
-    padding: 1em;
-    margin: 1em 0;
+/* Block code styling */
+div.code-block {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #f5f5f5;
+    padding: 10px;
     border-radius: 5px;
-}
-.callout.note {
-    background-color: #e0f7fa;
-    border-left: 5px solid #00acc1;
-}
-.callout.question {
-    background-color: #fff8e1;
-    border-left: 5px solid #ffb300;
-}
-.callout.info {
-    background-color: #e3f2fd;
-    border-left: 5px solid #1e88e5;
-}
-.callout.warning {
-    background-color: #ffebee;
-    border-left: 5px solid #e53935;
-}
-.callout.blockquote {
-    background-color: #f1f1f1;
-    border-left: 5px solid #cccccc;
+    color: #333;
+    overflow-x: auto;
+    white-space: pre;
+    margin: 10px 0;
 }
 
-/* images */
+/* Callouts Style */
+.callout {
+    padding: 15px;
+    margin: 15px 0;
+    border: 1px solid #000000;
+    background-color: #2f3b86ff;
+    color: #e7e0d3ff;
+}
+
+/* Images */
 img {
-    max-width: 100%;   /* Scale image to fit within its container */
-    height: auto;      /* Maintain aspect ratio */
-    display: block;    /* Prevent inline space below images */
-    margin: 0 auto;    /* Center image if within a container */
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px auto;
+    border: none;
+}
+
+/* Links */
+a {
+    color: #6327b3ff;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #551a8b;
+}
+
+/* Button Styling */
+button {
+    font-family: inherit;
+    background-color: #cccccc;
+    color: #2e3436ff;
+    padding: 10px;
+    border: 1px solid #2e3436ff;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #2e3436ff;
+    color: rgb(242, 233, 216);
 }

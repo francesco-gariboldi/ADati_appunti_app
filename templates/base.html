@@ -11,23 +11,24 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js"></script>
     <!-- Configura MathJax per il rendering delle formule matematiche -->
     <script type="text/javascript">
-      window.MathJax = {
-        tex: {
-          inlineMath: [['$', '$'], ['\\(', '\\)']],
-          displayMath: [['$$', '$$'], ['\\[', '\\]']],
-          processEscapes: true
-        },
-        options: {
-          skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-          processHtmlClass: "mathjax_process"
-        }
-      };
-    </script>
+        window.MathJax = {
+          tex: {
+            inlineMath: [['$', '$']],
+            displayMath: [['$$', '$$']],
+            processEscapes: true
+          },
+          options: {
+            skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            ignoreHtmlClass: "no-mathjax",
+            processHtmlClass: "mathjax_process"
+          }
+        };
+      </script>            
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.js" crossorigin="anonymous"></script>
     <!-- Script per il dropdown -->
     <script>
-      function toggleDropdown() {
-          document.getElementById("dropdown-content").classList.toggle("show");
+      function toggleDropdown(id) {
+          document.getElementById(id).classList.toggle("show");
       }
       window.onclick = function(event) {
           if (!event.target.matches('.dropbtn')) {
@@ -48,20 +49,86 @@
           }
       });
     </script>
+    <!-- Script per impedire copia/incolla e tasto destro -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          document.oncontextmenu = function() { return false; }; // Disabilita il menu contestuale (tasto destro del mouse)
+          document.onselectstart = function() { return false; }; // Disabilita la selezione del testo
+          document.oncopy = function() { return false; }; // Disabilita l'evento di copia
+          document.ondragstart = function() { return false; }; // Disabilita il drag del testo
+      });
+    </script>
+    <!-- Stile CSS per impedire la selezione, aggiungere overlay e dissuadere screenshots -->
+    <style>
+        body {
+            user-select: none; /* Disabilita la selezione del testo */
+            -webkit-user-select: none; /* Disabilita la selezione del testo per Safari/Chrome */
+            -moz-user-select: none; /* Disabilita la selezione del testo per Firefox */
+            -ms-user-select: none; /* Disabilita la selezione del testo per IE/Edge */
+            position: relative;
+        }
+        body::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            pointer-events: none;
+            animation: flicker 1s infinite; /* Animazione per creare disturbo visivo durante screenshot */
+        }
+        .content-overlay {
+            position: relative;
+        }
+        .content-overlay::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            pointer-events: none;
+            animation: flicker 1s infinite; /* Animazione per creare disturbo visivo durante screenshot */
+        }
+        @keyframes flicker {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
 </head>
 <body>
     <h1>{{ title }}</h1>
     <nav>
+        <!-- Existing Dropdown Menu -->
         <div class="dropdown">
-            <button onclick="toggleDropdown()" class="dropbtn">ADati Indice</button>
-            <div id="dropdown-content" class="dropdown-content">
+            <button onclick="toggleDropdown('index-dropdown')" class="dropbtn">Argomenti trattati</button>
+            <div id="index-dropdown" class="dropdown-content">
                 {% for page in pages %}
                     <a href="{{ page }}">{{ page.replace('.html', '')[0] | upper }}{{ page.replace('.html', '')[1:] }}</a>
                 {% endfor %}
             </div>
         </div>
+
+        <!-- New Dropdown for Course Lessons -->
+        <div class="dropdown">
+            <button onclick="toggleDropdown('lessons-dropdown')" class="dropbtn">Appunti lezioni (ADati in psicologia)</button>
+            <div id="lessons-dropdown" class="dropdown-content">
+                <a href="Appunti_05-04.html">Appunti 05/04</a>
+                <a href="Appunti_06-04.html">Appunti 06/04</a>
+                <a href="Appunti_22_04.html">Appunti 22/04</a>
+                <a href="manipolazione_dati.html">Manipolazione dei Dati</a>
+                <a href="calcolare_n°di_predittori_e_effetti_e_parametri.html">Calcolo di Predittori</a>
+                <a href="Regressione-lineare-semplice.html">Regressione lineare semplice</a>
+                <a href="Prima-lezione-modelli-lineari-a-due-variabili.html">Prima Lezione Modelli Lineari</a>
+                <a href="modelli_lineari_multilivello.html">Modelli Lineari Multilivello</a>
+            </div>
+        </div>
     </nav>
-    <main class="mathjax_process">
+
+    <main class="mathjax_process content-overlay">
         {{ content | safe }}
     </main>
 </body>
