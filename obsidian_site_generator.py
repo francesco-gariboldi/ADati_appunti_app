@@ -18,8 +18,8 @@ css_filename = 'style.css'
 # Ensure necessary directories exist
 os.makedirs(pages_dir, exist_ok=True)
 
-# Output directories for the Flask-ready frontend
-output_dir_frontend = os.path.join(base_dir, 'app_frontend')
+# Output directories for the converted files
+output_dir_frontend = os.path.join(base_dir, 'frontend_files')
 output_templates_dir = os.path.join(output_dir_frontend, 'templates')
 output_static_dir = os.path.join(output_dir_frontend, 'static')
 output_images_dir = os.path.join(output_static_dir, 'images')
@@ -37,14 +37,19 @@ template = env.get_template('base.html')
 md = MarkdownIt()
 
 # Function to convert Obsidian-style links
+# For resources-link: "![[]]" or notes-link: "[[]]"
+# matches every "|text" if existing" (the custom link alias)
+# and replaces it with the correct HTML (i.e., the alternative display text)
 def convert_obsidian_links(text):
     md_reg = r'(!)?\[\[([^\]|]+)(?:\|([^\]]+))?\]\]'
 
+    # Function to replace the matched link with HTML
     def replace_link(match):
         is_embed = bool(match.group(1))
         link_target = match.group(2).strip()
         alt_text = match.group(3).strip() if match.group(3) else link_target
         if is_embed:
+            # If it's an image, return an <img> tag, otherwise return a link
             return f'<img src="static/images/{link_target}" alt="{alt_text}">'
         else:
             return f'<a href="{link_target}.html">{alt_text}</a>'
@@ -53,24 +58,83 @@ def convert_obsidian_links(text):
 
 # Function to convert Obsidian callouts
 def convert_callouts(text):
-    callout_pattern = r'^\s*>\s*(\[\s*(!|\?|i|x)\s*\])?\s*(.*)$'
-    callout_classes = {'!': 'note', '?': 'question', 'i': 'info', 'x': 'warning'}
+    callout_pattern = re.compile(r'^\s*>\s*(\[\s*!?\s*([\w-]+)\s*\])?\s*(.*)$')
+    
+    lines = text.split("\n")
+    converted_lines = []
+    inside_callout = False
+    callout_class = "blockquote"
+    callout_content = []
 
-    def callout_replacer(match):
-        callout_type = match.group(2)
-        content = match.group(3)
-        callout_class = callout_classes.get(callout_type, 'note') if callout_type else 'blockquote'
-        return f'<div class="callout {callout_class}"><p>{content}</p></div>'
+    for line in lines:
+        match = callout_pattern.match(line)
+        
+        if match:
+            callout_type = match.group(2)  # Extract callout type (e.g., 'note', 'question')
+            content = match.group(3)  # Extract actual content
+            
+            if callout_type:
+                callout_class = callout_type.lower()
+                inside_callout = True
+                callout_content = [content]  # Start a new callout
+            else:
+                # Normal blockquote (no callout)
+                converted_lines.append(f'<blockquote>{content}</blockquote>')
+        else:
+            if inside_callout:
+                if line.strip().startswith(">"):
+                    callout_content.append(line.lstrip("> ").strip())  # Add to callout body
+                else:
+                    # Callout ended, write the HTML and reset
+                    converted_lines.append(f'<div class="callout {callout_class}"><p>{"<br>".join(callout_content)}</p></div>')
+                    inside_callout = False
+                    converted_lines.append(line)  # Process this line normally
+            else:
+                converted_lines.append(line)
 
-    return '\n'.join(re.sub(callout_pattern, callout_replacer, line) for line in text.split('\n'))
+    # If the last line was a callout, make sure to close it
+    if inside_callout:
+        converted_lines.append(f'<div class="callout {callout_class}"><p>{"<br>".join(callout_content)}</p></div>') 
+
+    return "\n".join(converted_lines)
 
 # Function to wrap code blocks and inline code with HTML tags
 def wrap_code_blocks(text):
-    # Convert inline code to <code> tags
-    text = re.sub(r'`([^`]+)`', r'<code class="code-inline">\1</code>', text)
-    # Convert block code (```...```) to <pre><code> blocks
-    text = re.sub(r'```(.+?)```', r'<pre><code>\1</code></pre>', text, flags=re.DOTALL)
+    # This function will replace triple-backtick code blocks with HTML
+    # Prism.js expects <pre><code class="language-XYZ"> ... </code></pre>
+    def code_block_replacer(match):
+        # Group 1 is the optional language specifier; Group 2 is the code content.
+        language = match.group(1) or ""
+        code_content = match.group(2)
+        # Clean up the language string and build the Prism class:
+        language = language.strip()
+        lang_class = f"language-{language}" if language else "language-none"
+        return f'<pre><code class="{lang_class}">{code_content}</code></pre>'
+
+    # The regex breakdown:
+    # - ``` starts the code block
+    # - (?:([\w+-]+))? optionally captures a language specifier consisting of word characters,
+    #   pluses or dashes (you can adjust this pattern if needed)
+    # - \n requires that the language (if provided) is followed by a newline
+    # - (.*?) lazily captures everything (including newlines, because of re.DOTALL) as the code content
+    # - ``` ends the code block
+    text = re.sub(
+        r'```(?:([\w+-]+))?\n(.*?)```',
+        code_block_replacer,
+        text,
+        flags=re.DOTALL
+    )
+    
+    # Convert inline code (using single backticks) to <code> tags.
+    # We use negative lookbehind and lookahead to avoid conflicts with the triple backticks.
+    text = re.sub(
+        r'(?<!`)`([^`\n]+)`(?!`)',
+        r'<code class="code-inline">\1</code>',
+        text
+    )
+    
     return text
+
 
 # Function to process Markdown files
 def generate_html_from_markdown(filename):
@@ -162,4 +226,4 @@ def copy_assets():
 # Execute asset copying
 copy_assets()
 
-print(f"Generated Flask-ready frontend saved to: {output_dir_frontend}")
+print(f"Generated frontend saved to: {output_dir_frontend}")

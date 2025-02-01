@@ -1,5 +1,5 @@
 # Ignore everything inside the specified folders
-app_frontend/
+frontend_files/
 pages/*
 extra/
 

@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
-    <!-- Stile personalizzato -->
-    <link rel="stylesheet" href="style.css">
-    <!-- Prism.js per l'evidenziazione del codice -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism-tomorrow.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Stile -->
+    <link rel="stylesheet" href="style.css"> 
     <!-- Configura MathJax per il rendering delle formule matematiche -->
     <script type="text/javascript">
         window.MathJax = {
@@ -98,27 +96,34 @@
             100% { opacity: 1; }
         }
     </style>
+    <!-- Prism.js per l'evidenziazione del codice -->
+    <link href="./static/themes/prism.css" rel="stylesheet" />
 </head>
 <body>
+    <img 
+        src="/main_icon.svg" class="main-icon"
+        alt="Main Icon" 
+        >
     <h1>{{ title }}</h1>
     <nav>
         <!-- Existing Dropdown Menu -->
         <div class="dropdown">
-            <button onclick="toggleDropdown('index-dropdown')" class="dropbtn">Argomenti trattati</button>
+            <button onclick="toggleDropdown('index-dropdown')" class="dropbtn args-btn">Argomenti trattati</button>
             <div id="index-dropdown" class="dropdown-content">
-                {% for page in pages %}
-                    <a href="{{ page }}">{{ page.replace('.html', '')[0] | upper }}{{ page.replace('.html', '')[1:] }}</a>
+                {% for page in pages|sort %}
+                    <a href="{{ page }}">
+                        {{ page.replace('.html', '')[0] | upper }}{{ page.replace('.html', '')[1:] }}
+                    </a>
                 {% endfor %}
             </div>
         </div>
-
         <!-- New Dropdown for Course Lessons -->
         <div class="dropdown">
-            <button onclick="toggleDropdown('lessons-dropdown')" class="dropbtn">Appunti lezioni (ADati in psicologia)</button>
+            <button onclick="toggleDropdown('lessons-dropdown')" class="dropbtn lezioni-btn">Appunti lezioni (ADati in psicologia)</button>
             <div id="lessons-dropdown" class="dropdown-content">
                 <a href="Appunti_05-04.html">Appunti 05/04</a>
                 <a href="Appunti_06-04.html">Appunti 06/04</a>
-                <a href="Appunti_22_04.html">Appunti 22/04</a>
+                <a href="Appunti_22_04-27_04.html">Appunti_22_04 + 27_04</a>
                 <a href="manipolazione_dati.html">Manipolazione dei Dati</a>
                 <a href="calcolare_n°di_predittori_e_effetti_e_parametri.html">Calcolo di Predittori</a>
                 <a href="Regressione-lineare-semplice.html">Regressione lineare semplice</a>
@@ -131,5 +136,12 @@
     <main class="mathjax_process content-overlay">
         {{ content | safe }}
     </main>
+    <script src="prism.js"></script>
+    <script>
+        // Activate Prism highlighting once the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', function () {
+          Prism.highlightAll();
+        });
+      </script>
 </body>
 </html>
